@@ -1,0 +1,106 @@
+<%
+  // Extract project properties with safe defaults
+  const p = typeof project !== 'undefined' ? project : {
+    id: 'proj_sample',
+    clientName: 'Aetheric Sound Labs',
+    clientInitials: 'AS',
+    projectTitle: 'Next-Gen Web Audio Synthesis Platform',
+    category: 'Full-Stack Development',
+    status: 'In Progress',
+    budget: 18500,
+    currency: 'USD',
+    amountPaid: 9250,
+    deadline: '2026-10-15',
+    milestones: [
+      { id: 'm1', title: 'Brand Identity', completed: true },
+      { id: 'm2', title: 'DSP Middleware', completed: true },
+      { id: 'm3', title: 'Staging Deployment', completed: false }
+    ],
+    invoiceNumber: 'INV-2026-004'
+  };
+
+  // Auto-generate initials if clientInitials missing
+  let initials = p.clientInitials;
+  if (!initials && p.clientName) {
+    const parts = p.clientName.trim().split(/\s+/);
+    initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : p.clientName.substring(0, 2).toUpperCase();
+  }
+
+  // Calculate milestone progress
+  const totalMilestones = (p.milestones && p.milestones.length) ? p.milestones.length : 0;
+  const completedMilestones = (p.milestones && p.milestones.length) ? p.milestones.filter(m => m.completed).length : 0;
+  const progressPercent = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
+
+  // Status badge CSS class
+  const statusSlug = (p.status || 'in-progress').toLowerCase().replace(/\s+/g, '-');
+
+  // Currency formatting
+  const currSymbol = p.currency === 'EUR' ? '€' : p.currency === 'GBP' ? '£' : p.currency === 'INR' ? '₹' : '$';
+  const formatAmt = (amt) => currSymbol + Number(amt || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const unbilled = Math.max(0, (p.budget || 0) - (p.amountPaid || 0));
+%>
+
+<article class="project-card" data-id="<%= p.id %>" data-status="<%= p.status %>" data-title="<%= p.projectTitle %>" data-client="<%= p.clientName %>">
+  <!-- Card Header: Client Monogram & Status Pill -->
+  <div>
+    <div class="card-top">
+      <div class="client-identity">
+        <div class="monogram-avatar" title="<%= p.clientName %>">
+          <%= initials || 'AT' %>
+        </div>
+        <div class="client-meta">
+          <span class="client-name"><%= p.clientName %></span>
+          <span class="project-category"><%= p.category || 'Creative Direction' %></span>
+        </div>
+      </div>
+
+      <span class="status-pill status-<%= statusSlug %>">
+        <%= p.status %>
+      </span>
+    </div>
+
+    <!-- Project Title -->
+    <h3 class="project-title">
+      <a href="/projects/<%= p.id %>"><%= p.projectTitle %></a>
+    </h3>
+
+    <!-- Milestone Progress Track -->
+    <div class="card-progress-section">
+      <div class="progress-header">
+        <span>Milestones (<%= completedMilestones %>/<%= totalMilestones %>)</span>
+        <span class="mono-num"><%= progressPercent %>%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: <%= progressPercent %>%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial Telemetry Footer -->
+  <div class="card-financials">
+    <div class="finance-col">
+      <span class="finance-label">Contract Total</span>
+      <span class="finance-amount mono-num"><%= formatAmt(p.budget) %></span>
+    </div>
+
+    <div class="finance-col" style="text-align: right;">
+      <span class="finance-label">Unbilled Balance</span>
+      <span class="finance-unbilled mono-num"><%= formatAmt(unbilled) %></span>
+    </div>
+  </div>
+
+  <!-- Quick Action Drawer Links -->
+  <div style="display: flex; gap: var(--space-xs); margin-top: var(--space-sm); padding-top: var(--space-xs);">
+    <a href="/projects/<%= p.id %>" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.74rem; padding: 5px 8px;">
+      View Dossier
+    </a>
+    <a href="/projects/<%= p.id %>/invoice" class="btn btn-ghost btn-sm" title="Printable Invoice Sheet" style="font-size: 0.74rem; padding: 5px 8px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      <span>Invoice</span>
+    </a>
+  </div>
+</article>

@@ -1,0 +1,25 @@
+{
+  "name": "atelier-project-os",
+  "version": "1.0.0",
+  "description": "Atelier - Project & Invoice Operating System for boutique agencies and creative consultants",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "atelier",
+    "express",
+    "ejs",
+    "dashboard",
+    "invoice"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "method-override": "^3.0.0"
+  }
+}

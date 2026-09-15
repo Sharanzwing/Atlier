@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' — ATELIER' : 'ATELIER — Studio Project & Invoice OS' %></title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Google Fonts: Syne (Display), Plus Jakarta Sans (Interface), Space Mono (Numerics) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Design Tokens & Architectural Stylesheets -->
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/invoice.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Studio Editorial Navigation -->
+    <header class="studio-nav">
+      <div class="nav-container">
+        <div class="brand-section">
+          <a href="/" class="brand-logo" title="Atelier Studio OS">
+            <span class="brand-mark">A</span>
+            <span>ATELIER</span>
+          </a>
+          <span class="brand-tag">Studio OS // v1.0</span>
+        </div>
+
+        <div class="nav-actions">
+          <div class="nav-telemetry-pill">
+            <span class="pulse-dot"></span>
+            <span id="studioClock">00:00:00 UTC</span>
+          </div>
+
+          <a href="/projects/new" class="btn btn-primary btn-sm" id="navNewProjectBtn">
+            <span>+ New Dossier</span>
+            <span class="shortcut-key" style="background: rgba(0,0,0,0.15); color: #090A0D; border: none;">N</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">

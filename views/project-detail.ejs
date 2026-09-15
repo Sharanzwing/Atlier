@@ -1,0 +1,223 @@
+<%- include('partials/header', { title: (typeof project !== 'undefined' && project.projectTitle) ? project.projectTitle : 'Project Dossier' }) %>
+
+<%
+  // Resilient Project Resolution
+  const p = (typeof project !== 'undefined' && project) ? project : {
+    id: "proj_8471",
+    clientName: "Aetheric Sound Labs",
+    clientInitials: "AS",
+    projectTitle: "Next-Gen Web Audio Synthesis Platform",
+    category: "Full-Stack Development",
+    status: "In Progress",
+    budget: 18500,
+    currency: "USD",
+    amountPaid: 9250,
+    deadline: "2026-10-15",
+    milestones: [
+      { id: "m1", title: "Brand Identity & Audio Tokens", completed: true },
+      { id: "m2", title: "Express DSP Middleware Architecture", completed: true },
+      { id: "m3", title: "Client Staging Deployment", completed: false }
+    ],
+    invoiceNumber: "INV-2026-004",
+    createdAt: "2026-09-01T09:30:00.000Z"
+  };
+
+  const currSymbol = p.currency === 'EUR' ? '€' : p.currency === 'GBP' ? '£' : p.currency === 'INR' ? '₹' : '$';
+  const formatAmt = (amt) => currSymbol + Number(amt || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  
+  const totalMilestones = (p.milestones && p.milestones.length) ? p.milestones.length : 0;
+  const completedMilestones = (p.milestones && p.milestones.length) ? p.milestones.filter(m => m.completed).length : 0;
+  const progressPercent = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
+  const unbilled = Math.max(0, (p.budget || 0) - (p.amountPaid || 0));
+  const paidPercent = p.budget > 0 ? Math.min(100, Math.round(((p.amountPaid || 0) / p.budget) * 100)) : 0;
+  const statusSlug = (p.status || 'in-progress').toLowerCase().replace(/\s+/g, '-');
+%>
+
+<!-- Dossier Header & Breadcrumbs -->
+<div class="dossier-header-bar">
+  <div>
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Studio Matrix</a>
+      <span>/</span>
+      <span>Dossiers</span>
+      <span>/</span>
+      <span style="color: var(--text-primary);"><%= p.id %></span>
+    </nav>
+    <div style="display: flex; align-items: center; gap: var(--space-md); margin-top: var(--space-sm);">
+      <div class="monogram-avatar" style="width: 48px; height: 48px; font-size: 1.15rem;">
+        <%= p.clientInitials || 'AT' %>
+      </div>
+      <div>
+        <h1 style="font-size: 1.85rem;"><%= p.projectTitle %></h1>
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-top: 4px;">
+          <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">
+            Client: <%= p.clientName %>
+          </span>
+          <span class="status-pill status-<%= statusSlug %>">
+            <%= p.status %>
+          </span>
+          <span style="font-size: 0.8rem; color: var(--accent-gold);">
+            // <%= p.category || 'Production' %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Actions Dock -->
+  <div style="display: flex; align-items: center; gap: var(--space-sm);">
+    <a href="/projects/<%= p.id %>/invoice" class="btn btn-secondary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+      <span>Printable Invoice</span>
+    </a>
+
+    <a href="/projects/<%= p.id %>/edit" class="btn btn-secondary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+      <span>Edit Dossier</span>
+    </a>
+
+    <!-- Delete Action with Method-Override Support -->
+    <form action="/projects/<%= p.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Archive and delete this studio dossier permanently?');" style="display: inline;">
+      <button type="submit" class="btn btn-danger-outline" title="Delete Dossier">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Dossier 2-Column Grid -->
+<div class="dossier-layout">
+  <!-- Left Main Column: Deliverables & Milestones -->
+  <div>
+    <!-- Milestones Execution Checklist -->
+    <div class="dossier-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md);">
+        <div>
+          <h3 style="font-size: 1.15rem;">Commission Deliverables & Milestones</h3>
+          <p style="font-size: 0.8rem;">Interactive milestone sign-off for client deliverables.</p>
+        </div>
+        <div style="text-align: right;">
+          <span class="mono-num" style="font-weight: 700; color: var(--accent-gold); font-size: 1.1rem;"><%= progressPercent %>%</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Complete</span>
+        </div>
+      </div>
+
+      <!-- Milestone Track -->
+      <div class="progress-track" style="height: 6px; margin-bottom: var(--space-lg);">
+        <div class="progress-fill" style="width: <%= progressPercent %>%;"></div>
+      </div>
+
+      <div class="milestones-list">
+        <% if (p.milestones && p.milestones.length) { %>
+          <% p.milestones.forEach(function(m, idx) { %>
+            <div class="milestone-item <%= m.completed ? 'completed' : '' %>">
+              <div class="milestone-info">
+                <!-- Milestone Check Form / Toggle -->
+                <form action="/projects/<%= p.id %>/milestones/<%= m.id %>?_method=PATCH" method="POST" style="display: inline;">
+                  <button type="submit" class="milestone-check" title="Toggle Milestone Completion">
+                    <% if (m.completed) { %>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    <% } %>
+                  </button>
+                </form>
+                <div>
+                  <span class="milestone-title"><%= m.title %></span>
+                  <span style="display: block; font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-muted);">
+                    Phase <%= idx + 1 %> // ID: <%= m.id %>
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <% if (m.completed) { %>
+                  <span class="status-pill status-completed" style="font-size: 0.65rem;">Approved</span>
+                <% } else { %>
+                  <span class="status-pill status-pending" style="font-size: 0.65rem;">In Queue</span>
+                <% } %>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div style="text-align: center; padding: var(--space-lg); color: var(--text-muted); font-size: 0.85rem;">
+            No structured milestones registered for this dossier.
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Architectural Project Specification Notes -->
+    <div class="dossier-card">
+      <h3 style="font-size: 1.15rem; margin-bottom: var(--space-sm);">Studio Specifications & Metadata</h3>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); margin-top: var(--space-md);">
+        <div style="background: var(--bg-elevated); padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+          <span class="telemetry-label" style="display: block; margin-bottom: 4px;">Target Delivery</span>
+          <span class="mono-num" style="font-size: 1rem; color: #FFFFFF;"><%= p.deadline || '2026-10-31' %></span>
+        </div>
+        <div style="background: var(--bg-elevated); padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+          <span class="telemetry-label" style="display: block; margin-bottom: 4px;">Commission Reference</span>
+          <span class="mono-num" style="font-size: 1rem; color: var(--accent-gold);"><%= p.invoiceNumber || 'INV-2026-001' %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side Column: Financial Dossier & Balance -->
+  <div>
+    <div class="dossier-card">
+      <h3 style="font-size: 1.15rem; margin-bottom: var(--space-md);">Financial Telemetry</h3>
+
+      <div style="margin-bottom: var(--space-lg);">
+        <span class="telemetry-label">Contracted Value</span>
+        <div class="mono-num" style="font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-top: 4px;">
+          <%= formatAmt(p.budget) %>
+        </div>
+      </div>
+
+      <!-- Payment Progress Bar -->
+      <div style="margin-bottom: var(--space-lg);">
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 6px;">
+          <span style="color: var(--status-paid);">Paid: <%= formatAmt(p.amountPaid) %></span>
+          <span style="color: var(--text-muted);"><%= paidPercent %>%</span>
+        </div>
+        <div class="progress-track" style="height: 6px;">
+          <div class="progress-fill" style="width: <%= paidPercent %>%; background: var(--status-paid);"></div>
+        </div>
+      </div>
+
+      <div style="padding: var(--space-md); background: var(--bg-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: var(--space-lg);">
+        <span class="telemetry-label">Remaining Unbilled Balance</span>
+        <div class="mono-num" style="font-size: 1.3rem; font-weight: 700; color: var(--status-pending); margin-top: 4px;">
+          <%= formatAmt(unbilled) %>
+        </div>
+        <p style="font-size: 0.75rem; margin-top: 4px;">
+          Scheduled upon completion of Phase <%= completedMilestones + 1 %> deliverables.
+        </p>
+      </div>
+
+      <!-- Invoice Sheet Link Button -->
+      <a href="/projects/<%= p.id %>/invoice" class="btn btn-primary" style="width: 100%;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span>Open Minimalist Invoice Sheet</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

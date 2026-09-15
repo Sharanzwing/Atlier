@@ -1,0 +1,74 @@
+<%
+  // Resilient Telemetry Resolution
+  const stats = (typeof telemetry !== 'undefined' && telemetry) ? telemetry : {
+    totalContracted: 148500,
+    outstandingBalance: 42300,
+    activeCount: 4,
+    totalCount: 6,
+    avgCompletion: 72
+  };
+
+  const formatCurrency = (val) => {
+    return '$' + Number(val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+%>
+
+<section class="telemetry-grid" aria-label="Studio Performance Telemetry">
+  <!-- Metric 1: Total Contract Value -->
+  <div class="telemetry-card highlight">
+    <div class="telemetry-header">
+      <span class="telemetry-label">// 01 Total Contract Value</span>
+      <div class="telemetry-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="telemetry-value mono-num">
+      <%= formatCurrency(stats.totalContracted) %>
+    </div>
+    <div class="telemetry-subtext">
+      <span class="telemetry-trend">&#x2191; 18.4%</span>
+      <span>vs last studio fiscal quarter</span>
+    </div>
+  </div>
+
+  <!-- Metric 2: Outstanding / Unbilled Balance -->
+  <div class="telemetry-card">
+    <div class="telemetry-header">
+      <span class="telemetry-label">// 02 Outstanding Balance</span>
+      <div class="telemetry-icon" style="color: var(--status-pending);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+    </div>
+    <div class="telemetry-value mono-num" style="color: var(--status-pending);">
+      <%= formatCurrency(stats.outstandingBalance) %>
+    </div>
+    <div class="telemetry-subtext">
+      <span>Pending client sign-offs & deliverables</span>
+    </div>
+  </div>
+
+  <!-- Metric 3: Active Studio Dossiers -->
+  <div class="telemetry-card">
+    <div class="telemetry-header">
+      <span class="telemetry-label">// 03 Active Dossiers</span>
+      <div class="telemetry-icon" style="color: var(--status-paid);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="telemetry-value mono-num">
+      <%= stats.activeCount !== undefined ? stats.activeCount : 4 %>
+      <span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/ <%= stats.totalCount !== undefined ? stats.totalCount : 6 %></span>
+    </div>
+    <div class="telemetry-subtext">
+      <span class="telemetry-trend">&#x25CF; Active production capacity: <%= stats.avgCompletion !== undefined ? stats.avgCompletion : 72 %>%</span>
+    </div>
+  </div>
+</section>

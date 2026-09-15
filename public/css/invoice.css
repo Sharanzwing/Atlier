@@ -1,0 +1,266 @@
+/* ==========================================================================
+   ATELIER INVOICE ARCHITECTURE & PRINT SPECIFICATION
+   Client-Ready Minimalist Invoice & PDF Print Engine
+   ========================================================================== */
+
+.invoice-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.invoice-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.invoice-paper {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+}
+
+.invoice-header-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.invoice-brand-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #FFFFFF;
+}
+
+.invoice-meta-block {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.invoice-number {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 4px;
+}
+
+.invoice-parties-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+.party-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-xs);
+}
+
+.party-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.party-details {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   ITEMIZED DELIVERABLES TABLE
+   ========================================================================== */
+.invoice-table-wrapper {
+  margin-bottom: var(--space-2xl);
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.invoice-table th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.invoice-table td {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.invoice-table td.numeric,
+.invoice-table th.numeric {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Financial Totals Breakdown */
+.invoice-totals-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-2xl);
+}
+
+.invoice-totals-box {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  padding: 4px 0;
+  color: var(--text-secondary);
+}
+
+.total-row.grand-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.total-row.grand-total .total-amount {
+  color: var(--accent-gold);
+}
+
+/* Banking & Payment Terms */
+.invoice-footer-terms {
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+.terms-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   PRINT ENGINE (@media print)
+   Stripping headers, navigation, and canvas darks for pure crisp PDF output
+   ========================================================================== */
+@media print {
+  @page {
+    margin: 12mm 15mm;
+    size: A4 portrait;
+  }
+
+  /* Hide app navigation, footers, buttons, and screen utilities */
+  .studio-nav,
+  .studio-footer,
+  .invoice-toolbar,
+  .no-print,
+  body::before {
+    display: none !important;
+  }
+
+  body {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    font-size: 10pt;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .main-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .invoice-paper {
+    background: #FFFFFF !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: #111827 !important;
+  }
+
+  h1, h2, h3, h4, 
+  .invoice-brand-title,
+  .party-name,
+  .total-row.grand-total {
+    color: #000000 !important;
+  }
+
+  .invoice-number {
+    color: #000000 !important;
+    font-weight: 700 !important;
+  }
+
+  p, span, .party-details, .total-row, .invoice-table td {
+    color: #374151 !important;
+  }
+
+  .party-label,
+  .invoice-table th,
+  .terms-title,
+  .telemetry-label {
+    color: #6B7280 !important;
+  }
+
+  .invoice-header-grid,
+  .party-details,
+  .invoice-table th,
+  .invoice-table td,
+  .total-row.grand-total,
+  .invoice-footer-terms {
+    border-color: #E5E7EB !important;
+  }
+
+  .total-row.grand-total .total-amount {
+    color: #000000 !important;
+  }
+
+  .status-pill {
+    border: 1px solid #111827 !important;
+    background: transparent !important;
+    color: #111827 !important;
+  }
+}

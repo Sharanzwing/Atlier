@@ -1,0 +1,115 @@
+/**
+ * ATELIER STUDIO - Dashboard UI View Routes
+ * Section 5-A: RESTful Routing Plan
+ * 
+ * Practice connecting your views to the projectService functions here!
+ */
+
+import express from 'express';
+import * as projectService from '../services/projectService.js';
+
+const router = express.Router();
+
+/**
+ * GET /
+ * Fetches telemetry + active projects and renders index.ejs
+ */
+router.get('/', (req, res) => {
+  // TODO:
+  // 1. const projects = projectService.getAllProjects();
+  // 2. const telemetry = projectService.calculateTelemetry();
+  // 3. res.render('index', { projects, telemetry });
+  res.render('index');
+});
+
+/**
+ * GET /projects/new
+ * Displays project creation form
+ */
+router.get('/projects/new', (req, res) => {
+  // TODO: res.render('project-form');
+  res.render('project-form');
+});
+
+/**
+ * POST /projects
+ * Validates input & creates project in projectService
+ */
+router.post('/projects', (req, res) => {
+  // TODO:
+  // 1. projectService.createProject(req.body);
+  // 2. res.redirect('/');
+  res.redirect('/');
+});
+
+/**
+ * GET /projects/:id
+ * Fetches project dossier & milestones
+ */
+router.get('/projects/:id', (req, res) => {
+  // TODO:
+  // 1. const project = projectService.getProjectById(req.params.id);
+  // 2. if (!project) return res.status(404).send('Dossier Not Found');
+  // 3. res.render('project-detail', { project });
+  const project = projectService.getProjectById(req.params.id);
+  res.render('project-detail', { project });
+});
+
+/**
+ * GET /projects/:id/edit
+ * Pre-populates form with existing project data
+ */
+router.get('/projects/:id/edit', (req, res) => {
+  // TODO:
+  // 1. const project = projectService.getProjectById(req.params.id);
+  // 2. res.render('project-form', { project });
+  const project = projectService.getProjectById(req.params.id);
+  res.render('project-form', { project });
+});
+
+/**
+ * PATCH /projects/:id
+ * Updates project via method-override
+ */
+router.patch('/projects/:id', (req, res) => {
+  // TODO:
+  // 1. projectService.updateProject(req.params.id, req.body);
+  // 2. res.redirect('/projects/' + req.params.id);
+  res.redirect('/projects/' + req.params.id);
+});
+
+/**
+ * PATCH /projects/:id/milestones/:milestoneId
+ * Toggles milestone completion
+ */
+router.patch('/projects/:id/milestones/:milestoneId', (req, res) => {
+  // TODO:
+  // 1. projectService.toggleMilestone(req.params.id, req.params.milestoneId);
+  // 2. res.redirect('/projects/' + req.params.id);
+  res.redirect('/projects/' + req.params.id);
+});
+
+/**
+ * DELETE /projects/:id
+ * Deletes project record
+ */
+router.delete('/projects/:id', (req, res) => {
+  // TODO:
+  // 1. projectService.deleteProject(req.params.id);
+  // 2. res.redirect('/');
+  res.redirect('/');
+});
+
+/**
+ * GET /projects/:id/invoice
+ * Renders minimalist printable invoice view
+ */
+router.get('/projects/:id/invoice', (req, res) => {
+  // TODO:
+  // 1. const project = projectService.getProjectById(req.params.id);
+  // 2. res.render('invoice-view', { project });
+  const project = projectService.getProjectById(req.params.id);
+  res.render('invoice-view', { project });
+});
+
+export default router;

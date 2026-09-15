@@ -1,0 +1,155 @@
+<%- include('partials/header', { title: 'Studio Master Matrix' }) %>
+
+<!-- Master Telemetry Banner -->
+<%- include('partials/telemetry', { telemetry: typeof telemetry !== 'undefined' ? telemetry : undefined }) %>
+
+<%
+  // Resilient Project Dataset Resolution
+  const projectList = (typeof projects !== 'undefined' && Array.isArray(projects)) ? projects : [
+    {
+      id: "proj_8471",
+      clientName: "Aetheric Sound Labs",
+      clientInitials: "AS",
+      projectTitle: "Next-Gen Web Audio Synthesis Platform",
+      category: "Full-Stack Development",
+      status: "In Progress",
+      budget: 18500,
+      currency: "USD",
+      amountPaid: 9250,
+      deadline: "2026-10-15",
+      milestones: [
+        { id: "m1", title: "Brand Identity & Audio Tokens", completed: true },
+        { id: "m2", title: "Express DSP Middleware Architecture", completed: true },
+        { id: "m3", title: "Client Staging Deployment", completed: false }
+      ],
+      invoiceNumber: "INV-2026-004",
+      createdAt: "2026-09-01T09:30:00.000Z"
+    },
+    {
+      id: "proj_8472",
+      clientName: "Vanderbilt & Finch",
+      clientInitials: "VF",
+      projectTitle: "Architectural Portfolio & Monograph CMS",
+      category: "Creative Direction",
+      status: "In Review",
+      budget: 24000,
+      currency: "USD",
+      amountPaid: 24000,
+      deadline: "2026-09-28",
+      milestones: [
+        { id: "m1", title: "Information Architecture & Grid Specs", completed: true },
+        { id: "m2", title: "Editorial Layout & Typography", completed: true },
+        { id: "m3", title: "Client Review & Signoff", completed: false }
+      ],
+      invoiceNumber: "INV-2026-005",
+      createdAt: "2026-08-15T11:00:00.000Z"
+    },
+    {
+      id: "proj_8473",
+      clientName: "Nordic Kinetic Works",
+      clientInitials: "NK",
+      projectTitle: "Automated Industrial Telemetry Dashboard",
+      category: "Interface Engineering",
+      status: "Completed",
+      budget: 32000,
+      currency: "EUR",
+      amountPaid: 32000,
+      deadline: "2026-08-30",
+      milestones: [
+        { id: "m1", title: "WebSocket Pipeline", completed: true },
+        { id: "m2", title: "Real-time Canvas Rendering", completed: true },
+        { id: "m3", title: "Production Hardening", completed: true }
+      ],
+      invoiceNumber: "INV-2026-002",
+      createdAt: "2026-07-20T14:15:00.000Z"
+    },
+    {
+      id: "proj_8474",
+      clientName: "Solstice BioTech",
+      clientInitials: "SB",
+      projectTitle: "Genomic Sequence Visualization Studio",
+      category: "Full-Stack Development",
+      status: "Delayed",
+      budget: 45000,
+      currency: "USD",
+      amountPaid: 15000,
+      deadline: "2026-09-12",
+      milestones: [
+        { id: "m1", title: "Data Pipeline Ingestion", completed: true },
+        { id: "m2", title: "Interactive Chromosome Track", completed: false },
+        { id: "m3", title: "Clinical Export Validation", completed: false }
+      ],
+      invoiceNumber: "INV-2026-001",
+      createdAt: "2026-08-01T08:00:00.000Z"
+    }
+  ];
+
+  // Dynamic status counts for filter pills
+  const totalCount = projectList.length;
+  const inProgressCount = projectList.filter(p => (p.status || '').toLowerCase() === 'in progress').length;
+  const inReviewCount = projectList.filter(p => (p.status || '').toLowerCase() === 'in review').length;
+  const completedCount = projectList.filter(p => (p.status || '').toLowerCase() === 'completed').length;
+  const delayedCount = projectList.filter(p => (p.status || '').toLowerCase() === 'delayed').length;
+%>
+
+<!-- Interactive Matrix Toolbar: Filter Pills & Search -->
+<section class="matrix-toolbar">
+  <div class="filter-pills-group" role="tablist" aria-label="Status Filters">
+    <button class="filter-pill-btn active" data-filter="all" type="button">
+      <span>All Dossiers</span>
+      <span class="filter-count" id="activeFilterCount"><%= totalCount %></span>
+    </button>
+    <button class="filter-pill-btn" data-filter="in progress" type="button">
+      <span style="color: #60A5FA;">&#x25CF;</span>
+      <span>In Progress</span>
+      <span class="filter-count"><%= inProgressCount %></span>
+    </button>
+    <button class="filter-pill-btn" data-filter="in review" type="button">
+      <span style="color: #FBBF24;">&#x25CF;</span>
+      <span>In Review</span>
+      <span class="filter-count"><%= inReviewCount %></span>
+    </button>
+    <button class="filter-pill-btn" data-filter="completed" type="button">
+      <span style="color: #34D399;">&#x25CF;</span>
+      <span>Completed</span>
+      <span class="filter-count"><%= completedCount %></span>
+    </button>
+    <button class="filter-pill-btn" data-filter="delayed" type="button">
+      <span style="color: #F87171;">&#x25CF;</span>
+      <span>Delayed</span>
+      <span class="filter-count"><%= delayedCount %></span>
+    </button>
+  </div>
+
+  <div class="search-wrapper">
+    <input 
+      type="text" 
+      id="projectSearch" 
+      class="search-input" 
+      placeholder="Search clients, titles, tags..." 
+      aria-label="Filter Dossiers"
+    >
+    <span class="search-kbd-hint">/</span>
+  </div>
+</section>
+
+<!-- Project Matrix Responsive Grid -->
+<section class="projects-grid" id="projectMatrixContainer">
+  <% projectList.forEach(function(item) { %>
+    <%- include('partials/project-card', { project: item }) %>
+  <% }); %>
+</section>
+
+<!-- High-Impact Architectural Empty State (Section 6-5) -->
+<section class="empty-state" id="matrixEmptyState" style="display: none;">
+  <div class="empty-state-kicker">// ARCHIVE EMPTY</div>
+  <h3 class="empty-state-title">No Studio Dossiers Match Current Criteria</h3>
+  <p class="empty-state-desc">
+    There are currently no active projects matching this filter query or search term. Initialize a new studio commission below.
+  </p>
+  <a href="/projects/new" class="btn btn-primary">
+    <span>+ Initialize New Dossier</span>
+  </a>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,190 @@
+<%- include('partials/header', { title: 'Invoice // ' + ((typeof project !== 'undefined' && project.invoiceNumber) ? project.invoiceNumber : 'INV-2026-004') }) %>
+
+<%
+  // Resilient Project Data Resolution
+  const p = (typeof project !== 'undefined' && project) ? project : {
+    id: "proj_8471",
+    clientName: "Aetheric Sound Labs",
+    clientInitials: "AS",
+    projectTitle: "Next-Gen Web Audio Synthesis Platform",
+    category: "Full-Stack Development",
+    status: "In Progress",
+    budget: 18500,
+    currency: "USD",
+    amountPaid: 9250,
+    deadline: "2026-10-15",
+    milestones: [
+      { id: "m1", title: "Brand Identity & Audio Tokens", completed: true },
+      { id: "m2", title: "Express DSP Middleware Architecture", completed: true },
+      { id: "m3", title: "Client Staging Deployment", completed: false }
+    ],
+    invoiceNumber: "INV-2026-004",
+    createdAt: "2026-09-01T09:30:00.000Z"
+  };
+
+  const currSymbol = p.currency === 'EUR' ? '€' : p.currency === 'GBP' ? '£' : p.currency === 'INR' ? '₹' : '$';
+  const formatAmt = (amt) => currSymbol + Number(amt || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const unbilled = Math.max(0, (p.budget || 0) - (p.amountPaid || 0));
+
+  // Itemized breakdown based on milestones or budget slices
+  const milestonesList = (p.milestones && p.milestones.length) ? p.milestones : [
+    { title: "Core Platform Architecture & Discovery", completed: true },
+    { title: "Interface Engineering & System Design", completed: true },
+    { title: "Staging Testing & Quality Assurance", completed: false }
+  ];
+
+  const sliceAmount = p.budget / (milestonesList.length || 1);
+%>
+
+<div class="invoice-wrapper">
+  <!-- Invoice Screen-Only Toolbar -->
+  <div class="invoice-toolbar no-print">
+    <div style="display: flex; align-items: center; gap: var(--space-sm);">
+      <a href="/projects/<%= p.id %>" class="btn btn-secondary btn-sm">
+        &larr; Back to Dossier
+      </a>
+      <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
+        // STATUS: <%= p.status.toUpperCase() %>
+      </span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: var(--space-sm);">
+      <button type="button" id="printInvoiceBtn" class="btn btn-primary btn-sm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span>Print Invoice / Export PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Minimalist Architectural Invoice Sheet -->
+  <div class="invoice-paper" id="printableInvoiceSheet">
+    <!-- Invoice Header -->
+    <header class="invoice-header-grid">
+      <div>
+        <div class="invoice-brand-title">ATELIER STUDIO</div>
+        <p style="font-size: 0.82rem; margin-top: 4px; color: var(--text-secondary);">
+          Architectural Systems & Interface Engineering<br>
+          Zurich / London / San Francisco<br>
+          <span style="font-family: var(--font-mono); font-size: 0.75rem;">studio@atelier-os.internal</span>
+        </p>
+      </div>
+
+      <div class="invoice-meta-block">
+        <div class="invoice-number"><%= p.invoiceNumber || 'INV-2026-004' %></div>
+        <div>Issue Date: <span class="mono-num"><%= (p.createdAt || '2026-09-01').split('T')[0] %></span></div>
+        <div>Payment Due: <span class="mono-num"><%= p.deadline || '2026-10-15' %></span></div>
+        <div style="margin-top: 4px;">
+          <% if (unbilled === 0) { %>
+            <span class="status-pill status-paid" style="font-size: 0.65rem;">PAID IN FULL</span>
+          <% } else { %>
+            <span class="status-pill status-pending" style="font-size: 0.65rem;">BALANCE OUTSTANDING</span>
+          <% } %>
+        </div>
+      </div>
+    </header>
+
+    <!-- Parties Grid -->
+    <section class="invoice-parties-grid">
+      <div>
+        <div class="party-label">// Billed By</div>
+        <div class="party-name">Atelier Studio Architecture Inc.</div>
+        <div class="party-details">
+          450 Hardturmstrasse, Suite 8B<br>
+          8005 Zürich, Switzerland<br>
+          VAT ID: CHE-482.910.124 MWST
+        </div>
+      </div>
+
+      <div>
+        <div class="party-label">// Client Beneficiary</div>
+        <div class="party-name"><%= p.clientName %></div>
+        <div class="party-details">
+          Project: <%= p.projectTitle %><br>
+          Discipline: <%= p.category || 'Engineering Commission' %><br>
+          Dossier Reference: <span class="mono-num"><%= p.id %></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Itemized Deliverables Table -->
+    <section class="invoice-table-wrapper">
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th style="width: 50%;">Milestone / Scope Specification</th>
+            <th style="width: 20%;">Phase Status</th>
+            <th class="numeric" style="width: 30%;">Contract Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% milestonesList.forEach(function(m, idx) { %>
+            <tr>
+              <td>
+                <strong>Phase 0<%= idx + 1 %>: <%= m.title %></strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                  Architectural specification, code review, and QA verification.
+                </div>
+              </td>
+              <td>
+                <% if (m.completed) { %>
+                  <span style="color: var(--status-paid); font-size: 0.75rem; font-family: var(--font-mono);">&#x2713; Delivered</span>
+                <% } else { %>
+                  <span style="color: var(--status-pending); font-size: 0.75rem; font-family: var(--font-mono);">&#x25CF; In Production</span>
+                <% } %>
+              </td>
+              <td class="numeric"><%= formatAmt(sliceAmount) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Financial Totals Section -->
+    <section class="invoice-totals-wrapper">
+      <div class="invoice-totals-box">
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span class="mono-num"><%= formatAmt(p.budget) %></span>
+        </div>
+        <div class="total-row">
+          <span>Tax / VAT (0% Export)</span>
+          <span class="mono-num"><%= formatAmt(0) %></span>
+        </div>
+        <div class="total-row">
+          <span>Amount Previously Paid</span>
+          <span class="mono-num" style="color: var(--status-paid);">- <%= formatAmt(p.amountPaid) %></span>
+        </div>
+        <div class="total-row grand-total">
+          <span>Total Balance Due</span>
+          <span class="total-amount mono-num"><%= formatAmt(unbilled) %></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banking & Wire Transfer Details -->
+    <footer class="invoice-footer-terms">
+      <div>
+        <div class="terms-title">// Settlement Instructions</div>
+        <p>
+          Bank: UBS Switzerland AG, Zürich<br>
+          Account Name: Atelier Studio Operations<br>
+          IBAN: <span class="mono-num">CH93 0024 0240 8471 9021 3</span><br>
+          BIC / SWIFT: <span class="mono-num">UBSWCHZH80A</span>
+        </p>
+      </div>
+
+      <div>
+        <div class="terms-title">// Engagement Terms</div>
+        <p>
+          Payment due within 14 calendar days of issuance. All deliverables remain proprietary property of Atelier Studio until balance settlement.
+        </p>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
