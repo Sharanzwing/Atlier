@@ -54,7 +54,7 @@
 .invoice-number {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--accent-gold);
+  color: var(--accent-primary-light);
   margin-bottom: 4px;
 }
 
@@ -158,7 +158,7 @@
 }
 
 .total-row.grand-total .total-amount {
-  color: var(--accent-gold);
+  color: var(--accent-primary-light);
 }
 
 /* Banking & Payment Terms */

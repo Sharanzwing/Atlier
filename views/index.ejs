@@ -4,92 +4,15 @@
 <%- include('partials/telemetry', { telemetry: typeof telemetry !== 'undefined' ? telemetry : undefined }) %>
 
 <%
-  // Resilient Project Dataset Resolution
-  const projectList = (typeof projects !== 'undefined' && Array.isArray(projects)) ? projects : [
-    {
-      id: "proj_8471",
-      clientName: "Aetheric Sound Labs",
-      clientInitials: "AS",
-      projectTitle: "Next-Gen Web Audio Synthesis Platform",
-      category: "Full-Stack Development",
-      status: "In Progress",
-      budget: 18500,
-      currency: "USD",
-      amountPaid: 9250,
-      deadline: "2026-10-15",
-      milestones: [
-        { id: "m1", title: "Brand Identity & Audio Tokens", completed: true },
-        { id: "m2", title: "Express DSP Middleware Architecture", completed: true },
-        { id: "m3", title: "Client Staging Deployment", completed: false }
-      ],
-      invoiceNumber: "INV-2026-004",
-      createdAt: "2026-09-01T09:30:00.000Z"
-    },
-    {
-      id: "proj_8472",
-      clientName: "Vanderbilt & Finch",
-      clientInitials: "VF",
-      projectTitle: "Architectural Portfolio & Monograph CMS",
-      category: "Creative Direction",
-      status: "In Review",
-      budget: 24000,
-      currency: "USD",
-      amountPaid: 24000,
-      deadline: "2026-09-28",
-      milestones: [
-        { id: "m1", title: "Information Architecture & Grid Specs", completed: true },
-        { id: "m2", title: "Editorial Layout & Typography", completed: true },
-        { id: "m3", title: "Client Review & Signoff", completed: false }
-      ],
-      invoiceNumber: "INV-2026-005",
-      createdAt: "2026-08-15T11:00:00.000Z"
-    },
-    {
-      id: "proj_8473",
-      clientName: "Nordic Kinetic Works",
-      clientInitials: "NK",
-      projectTitle: "Automated Industrial Telemetry Dashboard",
-      category: "Interface Engineering",
-      status: "Completed",
-      budget: 32000,
-      currency: "EUR",
-      amountPaid: 32000,
-      deadline: "2026-08-30",
-      milestones: [
-        { id: "m1", title: "WebSocket Pipeline", completed: true },
-        { id: "m2", title: "Real-time Canvas Rendering", completed: true },
-        { id: "m3", title: "Production Hardening", completed: true }
-      ],
-      invoiceNumber: "INV-2026-002",
-      createdAt: "2026-07-20T14:15:00.000Z"
-    },
-    {
-      id: "proj_8474",
-      clientName: "Solstice BioTech",
-      clientInitials: "SB",
-      projectTitle: "Genomic Sequence Visualization Studio",
-      category: "Full-Stack Development",
-      status: "Delayed",
-      budget: 45000,
-      currency: "USD",
-      amountPaid: 15000,
-      deadline: "2026-09-12",
-      milestones: [
-        { id: "m1", title: "Data Pipeline Ingestion", completed: true },
-        { id: "m2", title: "Interactive Chromosome Track", completed: false },
-        { id: "m3", title: "Clinical Export Validation", completed: false }
-      ],
-      invoiceNumber: "INV-2026-001",
-      createdAt: "2026-08-01T08:00:00.000Z"
-    }
-  ];
-
-  // Dynamic status counts for filter pills
-  const totalCount = projectList.length;
-  const inProgressCount = projectList.filter(p => (p.status || '').toLowerCase() === 'in progress').length;
-  const inReviewCount = projectList.filter(p => (p.status || '').toLowerCase() === 'in review').length;
-  const completedCount = projectList.filter(p => (p.status || '').toLowerCase() === 'completed').length;
-  const delayedCount = projectList.filter(p => (p.status || '').toLowerCase() === 'delayed').length;
+  // Resolves the 'projects' array sent from your Express route
+  const list = (typeof projects !== 'undefined' && Array.isArray(projects)) ? projects : [];
+  
+  // Calculate status counts automatically from the list
+  const totalCount = list.length;
+  const inProgressCount = list.filter(p => (p.status || '').toLowerCase() === 'in progress').length;
+  const inReviewCount = list.filter(p => (p.status || '').toLowerCase() === 'in review').length;
+  const completedCount = list.filter(p => (p.status || '').toLowerCase() === 'completed').length;
+  const delayedCount = list.filter(p => (p.status || '').toLowerCase() === 'delayed').length;
 %>
 
 <!-- Interactive Matrix Toolbar: Filter Pills & Search -->
@@ -135,17 +58,17 @@
 
 <!-- Project Matrix Responsive Grid -->
 <section class="projects-grid" id="projectMatrixContainer">
-  <% projectList.forEach(function(item) { %>
+  <% list.forEach(function(item) { %>
     <%- include('partials/project-card', { project: item }) %>
   <% }); %>
 </section>
 
-<!-- High-Impact Architectural Empty State (Section 6-5) -->
-<section class="empty-state" id="matrixEmptyState" style="display: none;">
+<!-- High-Impact Architectural Empty State -->
+<section class="empty-state" id="matrixEmptyState" style="<%= list.length === 0 ? 'display: block;' : 'display: none;' %>">
   <div class="empty-state-kicker">// ARCHIVE EMPTY</div>
-  <h3 class="empty-state-title">No Studio Dossiers Match Current Criteria</h3>
+  <h3 class="empty-state-title">No Studio Dossiers Found</h3>
   <p class="empty-state-desc">
-    There are currently no active projects matching this filter query or search term. Initialize a new studio commission below.
+    There are currently no active projects matching this filter query. Initialize a new studio commission below.
   </p>
   <a href="/projects/new" class="btn btn-primary">
     <span>+ Initialize New Dossier</span>

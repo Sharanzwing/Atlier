@@ -15,11 +15,9 @@ const router = express.Router();
  * Fetches telemetry + active projects and renders index.ejs
  */
 router.get('/', (req, res) => {
-  // TODO:
-  // 1. const projects = projectService.getAllProjects();
-  // 2. const telemetry = projectService.calculateTelemetry();
-  // 3. res.render('index', { projects, telemetry });
-  res.render('index');
+  const projects = projectService.getAllProjects();
+  const telemetry = projectService.calculateTelemetry();
+  res.render('index', { projects, telemetry });
 });
 
 /**
@@ -27,7 +25,6 @@ router.get('/', (req, res) => {
  * Displays project creation form
  */
 router.get('/projects/new', (req, res) => {
-  // TODO: res.render('project-form');
   res.render('project-form');
 });
 
@@ -36,9 +33,7 @@ router.get('/projects/new', (req, res) => {
  * Validates input & creates project in projectService
  */
 router.post('/projects', (req, res) => {
-  // TODO:
-  // 1. projectService.createProject(req.body);
-  // 2. res.redirect('/');
+  projectService.createProject(req.body);
   res.redirect('/');
 });
 

@@ -29,7 +29,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle background noise texture & geometric mesh */
+/* Subtle background noise texture & modern cool slate mesh */
 body::before {
   content: '';
   position: fixed;
@@ -38,19 +38,19 @@ body::before {
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
+    radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.04) 0%, transparent 45%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Typography Hierarchy */
+/* Typography Hierarchy - Inter */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   color: #FFFFFF;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 h1 { font-size: 2.25rem; }
@@ -136,16 +136,16 @@ a {
 .brand-mark {
   width: 30px;
   height: 30px;
-  background: linear-gradient(135deg, var(--bg-surface), var(--bg-elevated));
-  border: 1px solid var(--accent-gold);
+  background: linear-gradient(135deg, #1E293B, #0F172A);
+  border: 1px solid var(--accent-primary-light);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-gold);
+  color: #FFFFFF;
   font-size: 0.9rem;
   font-weight: 800;
-  box-shadow: 0 0 12px var(--accent-gold-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .brand-tag {
@@ -219,15 +219,15 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, var(--accent-gold-light), var(--accent-gold));
-  color: #090A0D;
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 10px var(--accent-gold-glow);
+  background: linear-gradient(180deg, var(--accent-primary-light), var(--accent-primary));
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 10px var(--accent-glow);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, #E8BC7D, #DDB945);
-  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+  background: linear-gradient(180deg, #60A5FA, #1D4ED8);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
   transform: translateY(-1px);
 }
 
@@ -311,8 +311,8 @@ a {
 }
 
 .form-control:focus {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px var(--accent-gold-subtle);
+  border-color: var(--accent-primary-light);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
   background-color: var(--bg-elevated);
 }
 
@@ -322,7 +322,7 @@ a {
 
 select.form-control {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233B82F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 38px;
@@ -456,7 +456,7 @@ textarea.form-control {
 .shortcut-key {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  color: var(--accent-gold);
+  color: var(--accent-primary-light);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   padding: 2px 6px;
@@ -478,7 +478,7 @@ textarea.form-control {
 .empty-state-kicker {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--accent-gold);
+  color: var(--accent-primary-light);
   letter-spacing: 0.15em;
   margin-bottom: var(--space-sm);
 }

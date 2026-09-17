@@ -41,13 +41,47 @@ export function getProjectById(id) {
  * @returns {Object} Created project object
  */
 export function createProject(payload) {
-  // TODO:
-  // 1. Generate unique id (e.g., 'proj_' + Math.floor(1000 + Math.random() * 9000))
+  const uniqueId = 'proj_' + Math.floor(10000000 + Math.random() * 90000000);
   // 2. Compute clientInitials from clientName
+  const name = (payload.clientName || "").trim();
+  const words = payload.clientName.split(/\s+/);
+  const clientInitials = words.length > 1 ? (words[0][0] + words[1][0]).toUpperCase() : name.substring(0,2).toUpperCase();
   // 3. Parse budget and amountPaid to numbers
+  const budget = Number(payload.budget) || 0;
+  const amountPaid = Number(payload.amountPaid) || 0;
   // 4. Transform milestonesRaw (newline separated text) into array of { id, title, completed: false }
   // 5. Add createdAt timestamp and invoiceNumber
+  const createdAt = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+  const milestones = payload.milestonesRaw
+    ? payload.milestonesRaw
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .map((title, index) => ({
+          id: 'm' + (index + 1),
+          title: title,
+          completed: false
+        }))
+    : [];
+  // 5. Build the complete project entity
+  const newProject = {
+    id: uniqueId,
+    clientName: payload.clientName,
+    clientInitials: clientInitials,
+    projectTitle: payload.projectTitle,
+    category: payload.category || 'Full-Stack Development',
+    status: payload.status || 'In Progress',
+    budget: budget,
+    currency: payload.currency || 'USD',
+    amountPaid: amountPaid,
+    deadline: payload.deadline || '',
+    milestones: milestones,
+    invoiceNumber: 'INV-' + Math.floor(1000 + Math.random() * 9000),
+    createdAt: new Date().toISOString()
+  };
   // 6. Push to inMemoryProjects array and return it
+  inMemoryProjects.push(newProject);
+  return newProject; 
 }
 
 /**
@@ -86,9 +120,15 @@ export function deleteProject(id) {
 export function calculateTelemetry() {
   // TODO: Calculate:
   // - totalContracted: sum of all project budgets
+  let totalContracted = 0;
+  inMemoryProjects.forEach((project) => totalContracted += Number(project.budget) || 0);
   // - totalPaid: sum of all amountPaid
   // - outstandingBalance: totalContracted - totalPaid
   // - activeCount: number of projects with status 'In Progress' or 'In Review'
   // - totalCount: total projects
   // - avgCompletion: average % across all projects
+  const telemetry = {
+    totalContracted: totalContracted
+  }
+  return telemetry;
 }
