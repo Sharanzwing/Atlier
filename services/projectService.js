@@ -77,7 +77,7 @@ export function createProject(payload) {
     deadline: payload.deadline || '',
     milestones: milestones,
     invoiceNumber: 'INV-' + Math.floor(1000 + Math.random() * 9000),
-    createdAt: new Date().toISOString()
+    createdAt: createdAt
   };
   // 6. Push to inMemoryProjects array and return it
   inMemoryProjects.push(newProject);
@@ -119,16 +119,37 @@ export function deleteProject(id) {
  */
 export function calculateTelemetry() {
   // TODO: Calculate:
-  // - totalContracted: sum of all project budgets
   let totalContracted = 0;
-  inMemoryProjects.forEach((project) => totalContracted += Number(project.budget) || 0);
-  // - totalPaid: sum of all amountPaid
-  // - outstandingBalance: totalContracted - totalPaid
-  // - activeCount: number of projects with status 'In Progress' or 'In Review'
-  // - totalCount: total projects
+  let totalPaid = 0;
+  let activeCount = 0;
+  let totalMilestone = 0;
+  let completedMilestone = 0;
+
+  inMemoryProjects.forEach((project) => {
+    // - totalContracted: sum of all project budgets
+    totalContracted += Number(project.budget) || 0;
+    // - totalPaid: sum of all amountPaid
+    totalPaid += Number(project.amountPaid) || 0;  
+    // - activeCount: number of projects with status 'In Progress' or 'In Review'
+    project.status === 'In Progress' || project.status === 'In Review' ? activeCount += 1: activeCount += 0;
+    if(project.milestones && Array.isArray(project.milestones)){
+      totalMilestone += project.milestones.length;
+      completedMilestone += project.milestones.filter(m => m.completed).length;
+    }
+  });
+
   // - avgCompletion: average % across all projects
+  let avgCompletion = totalMilestone > 0 ? Math.round(completedMilestone / totalMilestone * 100) : 0;
+
   const telemetry = {
-    totalContracted: totalContracted
+    totalContracted: totalContracted,
+    totalPaid: totalPaid,
+    // - outstandingBalance: totalContracted - totalPaid
+    outstandingBalance: totalContracted - totalPaid,
+    activeCount: activeCount,
+     // - totalCount: total projects
+    totalCount: inMemoryProjects.length,
+    avgCompletion: avgCompletion
   }
   return telemetry;
 }

@@ -75,10 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emptyState) {
       emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
     }
-
-    if (activeCountDisplay) {
-      activeCountDisplay.textContent = visibleCount;
-    }
   }
 
   filterPillBtns.forEach(btn => {

@@ -2,7 +2,7 @@
  * ATELIER STUDIO - Server Bootstrapper & Middleware Configuration
  * Section 5: Architectural Foundation
  */
-
+// @ts-check
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';

@@ -175,10 +175,6 @@
   color: inherit;
 }
 
-.filter-pill-btn.active .filter-count {
-  background: rgba(0, 0, 0, 0.15);
-}
-
 .search-wrapper {
   position: relative;
   min-width: 260px;
