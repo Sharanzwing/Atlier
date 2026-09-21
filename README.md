@@ -4,7 +4,7 @@
 [![Express.js](https://img.shields.io/badge/Express.js-v4.21+-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com)
 [![EJS](https://img.shields.io/badge/View_Engine-EJS-B4CA65?style=for-the-badge&logo=ejs&logoColor=black)](https://ejs.co)
 [![CSS3](https://img.shields.io/badge/Design-Modern_CSS3_Tokens-1572B6?style=for-the-badge&logo=css3&logoColor=white)](public/css/tokens.css)
-[![Deployment](https://img.shields.io/badge/Deployed_on-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com)
+[![Deployment](https://img.shields.io/badge/Deployed_on-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://atlier-sjvs.onrender.com/)
 
 > **A bespoke Studio Project & Invoice Operating System engineered with Executive Tech design principles, monospaced tabular telemetry, and a database-ready Service-Layer architecture.**
 
@@ -12,7 +12,7 @@
 
 ## 🌐 Live Demo
 
-👉 **[Launch Live Studio OS on Render](https://atelier-studio.onrender.com)** *(Replace with your live Render URL)*
+👉 **[Launch Live Studio OS on Render](https://atlier-sjvs.onrender.com/)**
 
 ---
 
