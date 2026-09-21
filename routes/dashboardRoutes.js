@@ -42,11 +42,8 @@ router.post('/projects', (req, res) => {
  * Fetches project dossier & milestones
  */
 router.get('/projects/:id', (req, res) => {
-  // TODO:
-  // 1. const project = projectService.getProjectById(req.params.id);
-  // 2. if (!project) return res.status(404).send('Dossier Not Found');
-  // 3. res.render('project-detail', { project });
   const project = projectService.getProjectById(req.params.id);
+  if (!project) return res.status(404).send('Dossier Not Found');
   res.render('project-detail', { project });
 });
 
@@ -55,9 +52,6 @@ router.get('/projects/:id', (req, res) => {
  * Pre-populates form with existing project data
  */
 router.get('/projects/:id/edit', (req, res) => {
-  // TODO:
-  // 1. const project = projectService.getProjectById(req.params.id);
-  // 2. res.render('project-form', { project });
   const project = projectService.getProjectById(req.params.id);
   res.render('project-form', { project });
 });
@@ -67,9 +61,7 @@ router.get('/projects/:id/edit', (req, res) => {
  * Updates project via method-override
  */
 router.patch('/projects/:id', (req, res) => {
-  // TODO:
-  // 1. projectService.updateProject(req.params.id, req.body);
-  // 2. res.redirect('/projects/' + req.params.id);
+  projectService.updateProject(req.params.id, req.body);
   res.redirect('/projects/' + req.params.id);
 });
 
@@ -78,9 +70,7 @@ router.patch('/projects/:id', (req, res) => {
  * Toggles milestone completion
  */
 router.patch('/projects/:id/milestones/:milestoneId', (req, res) => {
-  // TODO:
-  // 1. projectService.toggleMilestone(req.params.id, req.params.milestoneId);
-  // 2. res.redirect('/projects/' + req.params.id);
+  projectService.toggleMilestone(req.params.id, req.params.milestoneId);
   res.redirect('/projects/' + req.params.id);
 });
 
@@ -89,9 +79,7 @@ router.patch('/projects/:id/milestones/:milestoneId', (req, res) => {
  * Deletes project record
  */
 router.delete('/projects/:id', (req, res) => {
-  // TODO:
-  // 1. projectService.deleteProject(req.params.id);
-  // 2. res.redirect('/');
+  projectService.deleteProject(req.params.id);
   res.redirect('/');
 });
 
@@ -100,9 +88,6 @@ router.delete('/projects/:id', (req, res) => {
  * Renders minimalist printable invoice view
  */
 router.get('/projects/:id/invoice', (req, res) => {
-  // TODO:
-  // 1. const project = projectService.getProjectById(req.params.id);
-  // 2. res.render('invoice-view', { project });
   const project = projectService.getProjectById(req.params.id);
   res.render('invoice-view', { project });
 });

@@ -92,6 +92,46 @@ export function createProject(payload) {
  */
 export function updateProject(id, payload) {
   // TODO: Find the project by id, merge fields, and return updated project
+  const project = getProjectById(id);
+  if(!project) return null;
+
+  if(payload.clientName) {
+    project.clientName = payload.clientName;
+    const name = (payload.clientName || "").trim();
+    const words = payload.clientName.split(/\s+/);
+    project.clientInitials = words.length > 1 ? (words[0][0] + words[1][0]).toUpperCase() : name.substring(0,2).toUpperCase();
+  }
+
+  if(payload.projectTitle) project.projectTitle = payload.projectTitle;
+
+  if(payload.category) project.category = payload.category;
+
+  if(payload.status) project.status = payload.status;
+
+  if(payload.currency) project.currency = payload.currency;
+
+  if(payload.deadline) project.deadline = payload.deadline;
+
+  if(payload.budget !== undefined) {
+    project.budget = Number(payload.budget) || 0;
+  }
+
+  if(payload.amountPaid !== undefined) {
+    project.amountPaid = Number(payload.amountPaid) || 0;
+  }
+
+  if(payload.milestonesRaw){
+    project.milestones = payload.milestonesRaw.split("\n").map(m => m.trim()).filter(m => m.length > 0).map((title, index) => {
+      const prevCompleted = (project.milestones[index] && project.milestones[index].completed) || false;
+      return {
+        id: "m" + (index + 1),
+        title: title,
+        completed: prevCompleted
+      }
+    });
+  }
+
+  return project;
 }
 
 /**
@@ -101,7 +141,15 @@ export function updateProject(id, payload) {
  * @returns {Object|null}
  */
 export function toggleMilestone(projectId, milestoneId) {
-  // TODO: Find project, find milestone inside project.milestones, flip milestone.completed (true/false)
+  const project = getProjectById(projectId);
+  if(!project || !project.milestones) return null;
+
+  const milestone = project.milestones.find(m => m.id === milestoneId);
+  if(!milestone) return null;
+
+  milestone.completed = !milestone.completed;
+
+  return project; 
 }
 
 /**
@@ -111,6 +159,7 @@ export function toggleMilestone(projectId, milestoneId) {
  */
 export function deleteProject(id) {
   // TODO: Use filter or splice to remove project matching id from inMemoryProjects
+  inMemoryProjects = inMemoryProjects.filter(m => m.id !== id);
 }
 
 /**
@@ -149,7 +198,7 @@ export function calculateTelemetry() {
     activeCount: activeCount,
      // - totalCount: total projects
     totalCount: inMemoryProjects.length,
-    avgCompletion: avgCompletion
+      avgCompletion: avgCompletion
   }
   return telemetry;
 }
