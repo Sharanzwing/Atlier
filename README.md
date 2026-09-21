@@ -12,7 +12,7 @@
 
 ## 🌐 Live Demo
 
-👉 **[Launch Live Studio OS on Render](https://atelier-studio.onrender.com)** *(Replace with your live Render URL)*
+👉 **atlier-sjvs.onrender.com/**
 
 ---
 
